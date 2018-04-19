@@ -5,11 +5,10 @@ A Pytorch Implementation for Compact Bilinear Pooling. Adapted from [tensorflow_
 
 ## Prerequisites
 
-Latest version of [pytorch_fft](https://github.com/locuslab/pytorch_fft)
+Install [pytorch_fft](https://github.com/locuslab/pytorch_fft) by 
 
 ```bash
-git clone https://github.com/locuslab/pytorch_fft.git
-cd pytorch_fft && python setup.py install
+pip install pytorch_fft
 ```
 
 
