@@ -88,9 +88,8 @@ class CompactBilinearPooling(nn.Module):
         fft1_real, fft1_imag = afft.Fft()(sketch_1, Variable(torch.zeros(sketch_1.size())).cuda())
         fft2_real, fft2_imag = afft.Fft()(sketch_2, Variable(torch.zeros(sketch_2.size())).cuda())
 
-        temp_rr, temp_ii = fft1_real.mul(fft2_real), fft1_imag.mul(fft2_imag)
-        fft_product_real = temp_rr - temp_ii
-        fft_product_imag = temp_rr + temp_ii
+        fft_product_real = fft1_real.mul(fft2_real) - fft1_imag.mul(fft2_imag)
+        fft_product_imag = fft1_real.mul(fft2_imag) + fft1_imag.mul(fft2_real)
 
         cbp_flat = afft.Ifft()(fft_product_real, fft_product_imag)[0]
 
