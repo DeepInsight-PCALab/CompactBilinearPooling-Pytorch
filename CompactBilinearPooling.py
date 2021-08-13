@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 
-import pytorch_fft.fft.autograd as afft
+import torch.fft as afft
 
 
 class CompactBilinearPooling(nn.Module):
@@ -85,13 +85,12 @@ class CompactBilinearPooling(nn.Module):
         sketch_1 = bottom1_flat.mm(self.sparse_sketch_matrix1)
         sketch_2 = bottom2_flat.mm(self.sparse_sketch_matrix2)
 
-        fft1_real, fft1_imag = afft.Fft()(sketch_1, Variable(torch.zeros(sketch_1.size())).cuda())
-        fft2_real, fft2_imag = afft.Fft()(sketch_2, Variable(torch.zeros(sketch_2.size())).cuda())
+        fft1 = afft.fft(sketch_1)
+        fft2 = afft.fft(sketch_2)
 
-        fft_product_real = fft1_real.mul(fft2_real) - fft1_imag.mul(fft2_imag)
-        fft_product_imag = fft1_real.mul(fft2_imag) + fft1_imag.mul(fft2_real)
+        fft_product = fft1 * fft2
 
-        cbp_flat = afft.Ifft()(fft_product_real, fft_product_imag)[0]
+        cbp_flat = afft.ifft(fft_product).real
 
         cbp = cbp_flat.view(batch_size, height, width, self.output_dim)
 
